@@ -1,12 +1,17 @@
 const express = require("express");
 const app = express();
+var cors = require("cors");
 const cookieParser = require("cookie-parser");
 const { connection } = require("./Config/db");
 const { userRouter } = require("./Routes/user.Route");
 require("dotenv").config();
 
 app.use(express.json());
-
+app.use(
+  cors({
+    origin: "*",
+  })
+);
 app.use(cookieParser());
 
 app.get("/", (req, res) => {

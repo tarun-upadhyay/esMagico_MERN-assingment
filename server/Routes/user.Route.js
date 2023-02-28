@@ -5,8 +5,8 @@ const userRouter = express.Router();
 
 userRouter.post("/signup", async (req, res) => {
   try {
-    let { name, email, password } = req.body;
-    const user = await UserModel.create({ name, email, password });
+    let { name, email, password ,role} = req.body;
+    const user = await UserModel.create({ name, email, password ,role});
     const token = user.getJWTToken();
 
     const options = {
@@ -15,6 +15,11 @@ userRouter.post("/signup", async (req, res) => {
         ),
         httpOnly: true,
       };
+      if(user.role === "admin"){
+        let user = await UserModel.find()
+        return res.status(200).cookie("token", token, options).json({success: true, token, user})
+      }
+
     return res.status(200).cookie("token", token, options).json({
       success: true,
       token,
@@ -52,9 +57,9 @@ userRouter.post("/login", async (req, res) => {
         ),
         httpOnly: true,
       };
-      if(user.role === "user"){
-        let User = await UserModel.find()
-        return res.status(200).cookie("token", token, options).json({success: true, token, User})
+      if(user.role === "admin"){
+        let user = await UserModel.find()
+        return res.status(200).cookie("token", token, options).json({success: true, token, user})
       }
       return res.status(200).cookie("token", token, options).json({success: true, token , user})
 
