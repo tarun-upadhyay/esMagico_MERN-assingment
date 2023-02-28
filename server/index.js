@@ -2,6 +2,7 @@ const express = require("express");
 const app = express();
 const cookieParser = require("cookie-parser");
 const { connection } = require("./Config/db");
+const { userRouter } = require("./Routes/user.Route");
 require("dotenv").config();
 
 app.use(express.json());
@@ -13,6 +14,8 @@ app.get("/", (req, res) => {
     .status(200)
     .json({ msg: "Welcome to our application this our home route" });
 });
+
+app.use("/user/api", userRouter)
 
  app.listen(process.env.PORT, async () => {
   try {
